@@ -1,0 +1,8 @@
+com/abner/financialtracker/controller/UserController.class
+com/abner/financialtracker/controller/HelloController.class
+com/abner/financialtracker/repository/UserRepository.class
+com/abner/financialtracker/model/User.class
+com/abner/financialtracker/config/SecurityConfig.class
+com/abner/financialtracker/service/UserService.class
+com/abner/financialtracker/FinancialtrackerApplication.class
+com/abner/financialtracker/model/User$Role.class
