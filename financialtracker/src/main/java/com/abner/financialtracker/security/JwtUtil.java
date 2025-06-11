@@ -1,28 +1,30 @@
 package com.abner.financialtracker.security;
 
-// Classe principal da biblioteca JJWT para criar, assinar, compactar, analisar e validar tokens JWT.
+// Classe principal da biblioteca JJWT, usada para construir, assinar, validar e analisar tokens JWT.
 import io.jsonwebtoken.Jwts;
 
-// Enum que define os algoritmos de assinatura (como HS256, RS256) usados para assinar o token JWT.
+// Enum que representa os algoritmos de assinatura digital disponíveis, como HS256 (HMAC com SHA-256).
 import io.jsonwebtoken.SignatureAlgorithm;
 
-// Classe utilitária para gerar chaves seguras (por exemplo, para HMAC-SHA) a partir de bytes ou aleatoriamente.
+// Classe utilitária para gerar e validar chaves seguras usadas na assinatura de tokens.
 import io.jsonwebtoken.security.Keys;
 
-// Classe para decodificar strings Base64 (como sua chave secreta codificada) em arrays de bytes.
+// Classe usada para decodificar uma string Base64 (ex: sua chave secreta codificada) em um array de bytes.
 import io.jsonwebtoken.io.Decoders;
 
-// Representa as informações (claims) contidas no corpo de um token JWT (como username, expiração, etc.).
+// Representa o conteúdo (claims) do token JWT, como subject, issuedAt, expiration, etc.
 import io.jsonwebtoken.Claims;
 
-// Classe da biblioteca Java padrão usada para representar uma chave criptográfica (usada para assinar/verificar o token).
+// Anotação que marca a classe como um bean Spring de componente genérico, permitindo que ela seja detectada automaticamente.
+import org.springframework.stereotype.Component;
+
+// Representa uma chave criptográfica usada para assinar/verificar tokens (ex: HMAC-SHA256).
 import java.security.Key;
 
-// Representa uma data e hora no formato padrão da API Java (usado para definir emissão e expiração do token).
+// Classe da biblioteca padrão do Java usada para trabalhar com datas, útil para definir emissão e expiração do token.
 import java.util.Date;
 
-import java.util.Date;
-
+@Component
 public class JwtUtil {
 
     private static final String SECRET_KEY_BASE64 = "YXJoaXNhaW5kZXZlbG9ASwdasdWGV2ZWxvcGVzYXJoaXNhaW9wZXJvZGV2ZWxvcGU=";
@@ -38,7 +40,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

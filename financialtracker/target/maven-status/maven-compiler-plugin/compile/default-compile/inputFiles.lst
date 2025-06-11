@@ -1,5 +1,6 @@
 /home/abner/projects/financialtracker/financialtracker/src/main/java/com/abner/financialtracker/FinancialtrackerApplication.java
 /home/abner/projects/financialtracker/financialtracker/src/main/java/com/abner/financialtracker/config/SecurityConfig.java
+/home/abner/projects/financialtracker/financialtracker/src/main/java/com/abner/financialtracker/controller/AuthController.java
 /home/abner/projects/financialtracker/financialtracker/src/main/java/com/abner/financialtracker/controller/HelloController.java
 /home/abner/projects/financialtracker/financialtracker/src/main/java/com/abner/financialtracker/controller/UserController.java
 /home/abner/projects/financialtracker/financialtracker/src/main/java/com/abner/financialtracker/dto/LoginRequest.java

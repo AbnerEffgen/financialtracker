@@ -9,18 +9,24 @@ import org.springframework.context.annotation.Configuration;
 // Importa a classe HttpSecurity, usada para configurar as regras de segurança HTTP da aplicação (ex: autenticação, autorização).
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
+// Anotação que habilita a configuração de segurança da web no Spring Security.
+// Permite que você personalize regras de autenticação/autorização criando um bean do tipo SecurityFilterChain.
+// Substitui a necessidade de estender WebSecurityConfigurerAdapter (deprecated nas versões mais novas).
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
 // Importa a interface SecurityFilterChain, que representa a cadeia de filtros do Spring Security para proteger requisições HTTP.
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .anyRequest().permitAll();
+                .csrf(csrf -> csrf.disable()) // novo formato
+                .authorizeHttpRequests(auth -> auth // novo formato com lambda
+                        .anyRequest().permitAll());
 
         return http.build();
     }
