@@ -11,5 +11,5 @@ import com.abner.financialtracker.model.User;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     List<Transaction> findByUser(User user);
 
-    List<Transaction> findByUserAndDataBetween(User user, LocalDate startDate, LocalDate endDate);
+    List<Transaction> findByUserAndDateBetween(User user, LocalDate startDate, LocalDate endDate);
 }

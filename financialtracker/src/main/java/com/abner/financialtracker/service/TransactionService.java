@@ -24,7 +24,7 @@ public class TransactionService {
     }
 
     public List<Transaction> getByUserAndDataRange(User user, LocalDate startDate, LocalDate endDate) {
-        return repository.findByUserAndDataBetween(user, startDate, endDate);
+        return repository.findByUserAndDateBetween(user, startDate, endDate);
     }
 
     public Transaction save(Transaction transaction) {

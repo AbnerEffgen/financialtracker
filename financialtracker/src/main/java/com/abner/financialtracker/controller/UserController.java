@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/auth/user")
 public class UserController {
 
     private final UserService userService;
@@ -38,7 +38,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> creatUser(@RequestBody User user) {
         try {
             User createdUser = userService.saveUser(user);

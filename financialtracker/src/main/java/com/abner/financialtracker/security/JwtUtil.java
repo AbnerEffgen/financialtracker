@@ -44,19 +44,19 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String extractUsername(String token) {
+    public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    public static boolean isTokenValid(String token, String username) {
+    public boolean isTokenValid(String token, String username) {
         return extractUsername(token).equals(username) && !isTokenExpired(token);
     }
 
-    private static boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    private static Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
