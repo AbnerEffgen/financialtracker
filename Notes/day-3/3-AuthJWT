@@ -1,0 +1,91 @@
+# Autenticação JWT no FinancialTracker
+
+Este documento explica o que foi feito para implementar a autenticação com JWT (JSON Web Token) na aplicação `FinancialTracker`, usando Spring Security.
+
+---
+
+## Visão Geral
+
+A autenticação com JWT permite que o cliente (como um navegador ou Postman) envie um token no cabeçalho de cada requisição, sem precisar manter sessão no servidor. Esse token carrega o nome de usuário (ou outro identificador), e o back-end pode usá-lo para verificar quem está fazendo a requisição.
+
+---
+
+## Estrutura de Classes Criadas
+
+### 1. `JwtUtil`
+
+Classe utilitária responsável por:
+- **Gerar** o token com `generateToken(username)`
+- **Validar** se o token ainda é válido com `isTokenValid(token, username)`
+- **Extrair** o username (login) de dentro do token com `extractUsername(token)`
+
+Ela usa uma **chave secreta** para assinar o token, garantindo que ninguém possa alterá-lo sem que o servidor perceba.
+
+Importante: os métodos **não são mais estáticos**, pois a classe é um `@Component` e está sendo **injetada com `@Autowired`**.
+
+---
+
+### 2. `CustomUserDetailsService`
+
+Classe que implementa `UserDetailsService` do Spring Security. Serve para dizer ao Spring como carregar os dados de um usuário a partir do banco de dados.
+
+Ela implementa o método:
+
+```java
+@Override
+public UserDetails loadUserByUsername(String username)
+```
+
+Esse método é chamado **automaticamente** pelo Spring quando for necessário verificar se o token recebido pertence a um usuário válido.
+
+- Ela usa o `UserRepository` para buscar o usuário.
+- Depois, transforma esse `User` no tipo `UserDetails` do Spring, que contém username, senha e papéis (`roles`).
+
+---
+
+### 3. `JwtAuthenticationFilter`
+
+Esse filtro intercepta **todas as requisições HTTP** e verifica se o cabeçalho `Authorization` tem um token JWT válido.
+
+Fluxo do filtro:
+1. Lê o header `Authorization: Bearer <token>`.
+2. Extrai o username com `jwtUtil.extractUsername(token)`.
+3. Verifica se o token é válido.
+4. Se estiver tudo certo, coloca o usuário autenticado dentro do `SecurityContextHolder`.
+
+Esse passo é essencial porque o Spring só reconhece o usuário atual se ele estiver no `SecurityContext`.
+
+---
+
+## Como funciona na prática?
+
+1. Você faz login → o back-end gera um token com `JwtUtil.generateToken(username)`.
+2. Esse token é devolvido e salvo no Postman, navegador, etc.
+3. Em cada requisição seguinte, você envia no header:
+   ```
+   Authorization: Bearer SEU_TOKEN_AQUI
+   ```
+4. O filtro `JwtAuthenticationFilter` valida esse token.
+5. O `SecurityContextHolder` passa a reconhecer o usuário, e você pode recuperar ele em um controller com:
+   ```java
+   public ResponseEntity<?> getData(Principal principal) {
+       String username = principal.getName(); // já autenticado via token
+   }
+   ```
+
+---
+
+## Conclusão
+
+Esse fluxo evita manter sessões e usa apenas o token JWT como prova de autenticação. O `CustomUserDetailsService` é necessário porque o Spring precisa saber **como carregar um usuário real do seu banco de dados** a partir do nome de login que vem no token.
+
+O `JwtAuthenticationFilter` garante que, se um token válido for passado no cabeçalho, a requisição será tratada como **autenticada** dentro da aplicação Spring.
+
+```bash
+Resumo:
+- JwtUtil: cria e valida tokens
+- CustomUserDetailsService: transforma dados do banco em UserDetails
+- JwtAuthenticationFilter: intercepta requisições e autentica com base no token
+```
+
+---
