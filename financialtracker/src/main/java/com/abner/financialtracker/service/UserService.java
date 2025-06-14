@@ -8,6 +8,7 @@ import java.util.List;
 // Ajuda a evitar null pointer exceptions ao buscar dados (ex: Optional<Usuario>).
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 // Importa a anotação @Service, que marca a classe como um componente de serviço do Spring.
 // Indica que ela contém lógica de negócio e será gerenciada como um bean pelo Spring.
 import org.springframework.stereotype.Service;
@@ -36,8 +37,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }
 
     public List<User> getAllUsers() {
